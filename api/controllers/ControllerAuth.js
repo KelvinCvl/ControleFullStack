@@ -23,6 +23,7 @@ exports.inscription = async (req, res) => {
     );
 
     res.status(201).json({ message: "Utilisateur créé", id: result.insertId });
+    
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
@@ -50,7 +51,17 @@ exports.connexion = async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
-    res.cookie("token", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    console.log("========== CRÉATION COOKIE ==========");
+    console.log("Token généré:", token);
+    console.log("====================================");
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "none",  
+      secure: false,
+      path: "/"          
+    });
     res.json({ message: "Connecté", token });
   } catch (err) {
     console.error(err);

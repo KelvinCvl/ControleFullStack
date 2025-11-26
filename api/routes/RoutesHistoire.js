@@ -1,11 +1,11 @@
 const express = require("express");
-//const { getStories, getStoryById, addStory } = require("../controllers/ControllerHistoire");
-
 const router = express.Router();
+const verifyToken = require("../middleware");
+const histoireCtrl = require("../controllers/ControllerHistoire");
 
-/*
-router.get("/", getStories);
-router.get("/:id", getStoryById);
-router.post("/", addStory);
-*/
+router.post("/", verifyToken, histoireCtrl.create);
+router.get("/mes", verifyToken, histoireCtrl.getMine);
+router.put("/:id", verifyToken, histoireCtrl.update);
+router.delete("/:id", verifyToken, histoireCtrl.remove);
+
 module.exports = router;
