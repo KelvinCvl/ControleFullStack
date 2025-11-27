@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [histoires, setHistoires] = useState([]);
+  const navigate = useNavigate();
 
-  useEffect(() => {
+  const token = localStorage.getItem("token");
+
   const fetchHistoires = async () => {
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+
     try {
       const res = await fetch("http://localhost:5000/histoire/mes", {
-        credentials: "include",
+        headers: { Authorization: token },
       });
 
       if (!res.ok) {
@@ -24,25 +32,81 @@ function Home() {
     }
   };
 
-  fetchHistoires();
-}, []);
+  useEffect(() => {
+    fetchHistoires();
+  }, []);
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Voulez-vous vraiment supprimer cette histoire ?")) return;
+
+    try {
+      const res = await fetch(`http://localhost:5000/histoire/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: token },
+      });
+
+      if (res.ok) {
+        setHistoires(histoires.filter((h) => h.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erreur serveur");
+    }
+  };
+
+  const handleToggleStatut = async (id, currentStatut) => {
+    const newStatut = currentStatut === "brouillon" ? "publié" : "brouillon";
+
+    try {
+      const res = await fetch(`http://localhost:5000/histoire/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ statut: newStatut }),
+      });
+
+      if (res.ok) {
+        setHistoires(
+          histoires.map((h) =>
+            h.id === id ? { ...h, statut: newStatut } : h
+          )
+        );
+      } else {
+        const data = await res.json();
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erreur serveur");
+    }
+  };
 
   return (
     <div style={{ padding: "2rem" }}>
       <h1>Mes histoires</h1>
+      <button onClick={() => navigate("/creer-histoire")}>Créer une histoire</button>
 
-      <a href="/creer-histoire">
-        <button>Créer une histoire</button>
-      </a>
-
-      <ul>
-        {histoires.map((h) => (
-          <li key={h.id}>
-            <strong>{h.titre}</strong> — {h.statut}
-          </li>
-        ))}
-      </ul>
+      {histoires.length === 0 ? (
+        <p>Aucune histoire pour le moment.</p>
+      ) : (
+        <ul>
+          {histoires.map((h) => (
+            <li key={h.id} style={{ marginBottom: "1rem" }}>
+              <strong>{h.titre}</strong> — {h.statut} <br />
+              <button onClick={() => navigate(`/modifier-histoire/${h.id}`)}>Modifier</button>
+              <button onClick={() => handleDelete(h.id)}>Supprimer</button>
+              <button onClick={() => handleToggleStatut(h.id, h.statut)}>
+                {h.statut === "brouillon" ? "Publier" : "Mettre en brouillon"}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
