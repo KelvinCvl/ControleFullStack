@@ -6,6 +6,7 @@ const authRouter = require("./routes/RoutesAuth");
 const pageRouter = require("./routes/RoutesPage");
 const choixRoutes = require("./routes/RoutesChoix");
 const statsRoutes = require("./routes/RoutesStats");
+const adminRoutes = require("./routes/RoutesAdmin");
 
 const cookieParser = require("cookie-parser");
 
@@ -27,5 +28,6 @@ app.use("/auth", authRouter);
 app.use("/page", pageRouter);
 app.use("/choix", choixRoutes);
 app.use("/statistique", statsRoutes);
+app.use("/admin", adminRoutes);
 
 app.listen(PORT, () => console.log(`API running on port ${PORT}`));
