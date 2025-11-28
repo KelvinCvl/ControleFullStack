@@ -5,7 +5,6 @@ import CreerHistoire from "./components/CreerHistoire";
 import ModifierHistoire from "./components/ModifierHistoire";
 import GestionHistoire from "./components/GestionHistoire";
 import GestionChoix from "./components/GestionChoix";
-import "./App.css";
 
 function App() {
   return (

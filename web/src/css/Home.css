@@ -1,0 +1,147 @@
+/* Body et html fullscreen */
+ html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* dégradé clair */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container principal en flex-col */
+.home-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Titre de la page */
+.home-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #222;
+  font-size: 2rem;
+}
+
+/* Bouton créer histoire */
+.home-container .create-button {
+  align-self: center;
+  margin-bottom: 2rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #000;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.home-container .create-button:hover {
+  background-color: #333;
+}
+
+/* Liste des histoires en grille responsive */
+.home-container ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex: 1; /* occupe tout l'espace vertical restant */
+  overflow-y: auto; /* scroll si beaucoup d'histoires */
+}
+
+/* Carte d'histoire */
+.home-container li {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: #000;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.home-container li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Titre et statut de l'histoire */
+.home-container li strong {
+  font-size: 1.2rem;
+}
+
+.home-container li .status {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #555;
+}
+
+/* Boutons action */
+.home-container li .actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.home-container li .actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #000;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background-color: #fff;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+.home-container li .actions button:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Texte par défaut si aucune histoire */
+.home-container p {
+  text-align: center;
+  color: #555;
+  font-size: 1rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Scrollbar esthétique */
+.home-container ul::-webkit-scrollbar {
+  width: 8px;
+}
+
+.home-container ul::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+/* Responsive mobile */
+@media (max-width: 480px) {
+  .home-container {
+    padding: 1rem;
+  }
+
+  .home-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .home-container li {
+    padding: 1rem;
+  }
+}

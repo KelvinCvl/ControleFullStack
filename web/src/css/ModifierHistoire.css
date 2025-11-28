@@ -1,0 +1,178 @@
+/* ModifierHistoire.css */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.modifier-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modifier-container h1 {
+  color: #fff;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Formulaire */
+.modifier-form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+/* Inputs, Textarea & Select */
+.modifier-form input[type="text"],
+.modifier-form textarea,
+.modifier-form select {
+  width: 100%;
+  padding: 0.875rem;
+  margin-bottom: 1.25rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #f8f9fa;
+  transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+
+  /* TEXTE TAPÉ EN NOIR PUR + CURSEUR NOIR */
+  color: #000000 !important;
+  caret-color: #000000;
+}
+
+/* Placeholder gris foncé mais lisible */
+.modifier-form input[type="text"]::placeholder,
+.modifier-form textarea::placeholder {
+  color: #555;
+  opacity: 1;
+}
+
+/* Au focus */
+.modifier-form input[type="text"]:focus,
+.modifier-form textarea:focus,
+.modifier-form select:focus {
+  outline: none;
+  border-color: #667eea;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+
+  /* On force le texte à rester noir même au focus */
+  color: #000000 !important;
+  caret-color: #000000;
+}
+
+.modifier-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.modifier-form select {
+  cursor: pointer;
+  color: #000000 !important; /* au cas où certains navigateurs gardent du gris */
+}
+
+/* Bouton submit */
+.modifier-form button[type="submit"] {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.modifier-form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.modifier-form button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Boutons d'action (retour, supprimer, etc.) */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  background: #2c3e50;
+  color: #fff;
+  border: 2px solid #2c3e50;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.action-buttons button:hover {
+  background: #34495e;
+  border-color: #34495e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.action-buttons button:active {
+  transform: translateY(0);
+}
+
+.action-buttons button:last-child {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+  backdrop-filter: blur(10px);
+}
+
+.action-buttons button:last-child:hover {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modifier-container {
+    padding: 1rem;
+  }
+
+  .modifier-container h1 {
+    font-size: 1.75rem;
+  }
+
+  .modifier-form {
+    padding: 1.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    min-width: 100%;
+  }
+}

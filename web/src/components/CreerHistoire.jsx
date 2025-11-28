@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/CreerHistoire.css"; // Ajoute cette ligne
 
 function CreerHistoire() {
   const [titre, setTitre] = useState("");
@@ -39,10 +40,10 @@ function CreerHistoire() {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
+    <div className="creer-container"> {/* Remplace style par className */}
       <h1>Créer une histoire</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form className="creer-form" onSubmit={handleSubmit}> {/* Ajoute className */}
         <input
           type="text"
           placeholder="Titre"
@@ -58,6 +59,7 @@ function CreerHistoire() {
 
         <button type="submit">Créer</button>
       </form>
+      <button className="back-button" onClick={() => navigate(`/home`)}>Retour</button>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import "../css/GestionHistoire.css";
 
 function GestionHistoire() {
-  const { id: histoireId } = useParams(); // id de l'histoire
+  const { id: histoireId } = useParams();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -11,14 +12,12 @@ function GestionHistoire() {
   const [fin, setFin] = useState(false);
 
   useEffect(() => {
+    if (!token) return;
     const fetchPages = async () => {
-      if (!token) return;
-
       try {
         const res = await fetch(`http://localhost:5000/page/${histoireId}`, {
           headers: { Authorization: token },
         });
-
         if (!res.ok) throw new Error("Impossible de charger les pages");
         const data = await res.json();
         setPages(data);
@@ -26,7 +25,6 @@ function GestionHistoire() {
         console.error(err);
       }
     };
-
     fetchPages();
   }, [histoireId, token]);
 
@@ -37,46 +35,30 @@ function GestionHistoire() {
     try {
       const res = await fetch("http://localhost:5000/page", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          histoire_id: histoireId,
-          contenu,
-          isEnd: fin,
-        }),
+        headers: { "Content-Type": "application/json", Authorization: token },
+        body: JSON.stringify({ histoire_id: histoireId, contenu, isEnd: fin }),
       });
 
       const data = await res.json();
-
       if (res.ok) {
         setPages([...pages, data]);
         setContenu("");
         setFin(false);
-      } else {
-        alert(data.message);
-      }
+      } else alert(data.message);
     } catch (err) {
       console.error(err);
       alert("Erreur serveur");
     }
   };
 
-  const handleDeletePage = async (pageId) => {
+  const handleDeletePage = async (id) => {
     if (!window.confirm("Voulez-vous vraiment supprimer cette page ?")) return;
-
     try {
-      const res = await fetch(`http://localhost:5000/page/${pageId}`, {
+      const res = await fetch(`http://localhost:5000/page/${id}`, {
         method: "DELETE",
         headers: { Authorization: token },
       });
-
-      if (res.ok) setPages(pages.filter((p) => p.id !== pageId));
-      else {
-        const data = await res.json();
-        alert(data.message);
-      }
+      if (res.ok) setPages(pages.filter((p) => p.id !== id));
     } catch (err) {
       console.error(err);
       alert("Erreur serveur");
@@ -85,33 +67,17 @@ function GestionHistoire() {
 
   const handleEditPage = async (page) => {
     const nouveauContenu = prompt("Modifier le contenu de la page", page.contenu);
-    if (nouveauContenu === null) return; // annuler
-
+    if (nouveauContenu === null) return;
     const nouveauFin = window.confirm("Cette page est-elle une fin ?");
 
     try {
       const res = await fetch(`http://localhost:5000/page/${page.id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          contenu: nouveauContenu,
-          isEnd: nouveauFin,
-        }),
+        headers: { "Content-Type": "application/json", Authorization: token },
+        body: JSON.stringify({ contenu: nouveauContenu, isEnd: nouveauFin }),
       });
-
-      const data = await res.json();
-
       if (res.ok) {
-        setPages(
-          pages.map((p) =>
-            p.id === page.id ? { ...p, contenu: nouveauContenu, isEnd: nouveauFin } : p
-          )
-        );
-      } else {
-        alert(data.message);
+        setPages(pages.map((p) => p.id === page.id ? { ...p, contenu: nouveauContenu, isEnd: nouveauFin } : p));
       }
     } catch (err) {
       console.error(err);
@@ -120,50 +86,42 @@ function GestionHistoire() {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
+    <div className="gestion-container">
       <h1>Gestion des pages</h1>
 
-      <form onSubmit={handleCreatePage} style={{ marginBottom: "2rem" }}>
+      <form className="gestion-form" onSubmit={handleCreatePage}>
         <textarea
+          className="gestion-textarea"
           placeholder="Contenu de la page"
           value={contenu}
           onChange={(e) => setContenu(e.target.value)}
         />
-        <label style={{ marginLeft: "0.5rem" }}>
-          <input
-            type="checkbox"
-            checked={fin}
-            onChange={(e) => setFin(e.target.checked)}
-          />{" "}
+        <label className="gestion-label">
+          <input type="checkbox" checked={fin} onChange={(e) => setFin(e.target.checked)} />
           Page de fin
         </label>
-        <button type="submit">Créer la page</button>
+        <button type="submit" className="gestion-button">Créer la page</button>
       </form>
 
       <h2>Pages existantes</h2>
       {pages.length === 0 ? (
         <p>Aucune page pour le moment</p>
       ) : (
-        <ul>
-          {pages.map((p, index) => (
-            <li key={p.id} style={{ marginBottom: "1rem" }}>
-              Page #{index + 1} — {p.isEnd ? "Fin" : "Non fin"}
-              <button onClick={() => handleEditPage(p)} style={{ marginLeft: "0.5rem" }}>
-                Modifier
-              </button>
-              <button onClick={() => handleDeletePage(p.id)} style={{ marginLeft: "0.5rem" }}>
-                Supprimer
-              </button>
-              <button
-                onClick={() => navigate(`/gestion-choix/${p.id}`)}
-                style={{ marginLeft: "0.5rem" }}
-              >
-                Gérer les choix
-              </button>
+        <ul className="gestion-list">
+          {pages.map((p, i) => (
+            <li key={p.id} className="gestion-item">
+              <span className="page-info">Page #{i+1} — {p.isEnd ? "Fin" : "Non fin"}</span>
+              <div className="actions">
+                <button onClick={() => handleEditPage(p)}>Modifier</button>
+                <button onClick={() => handleDeletePage(p.id)}>Supprimer</button>
+                <button onClick={() => navigate(`/gestion-choix/${p.id}`)}>Gérer les choix</button>
+              </div>
             </li>
           ))}
         </ul>
       )}
+
+      <button className="back-button" onClick={() => navigate(`/modifier-histoire/${histoireId}`)}>Retour</button>
     </div>
   );
 }

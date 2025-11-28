@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/Home.css"
 
 function Home() {
   const [histoires, setHistoires] = useState([]);
@@ -87,27 +88,34 @@ function Home() {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Mes histoires</h1>
-      <button onClick={() => navigate("/creer-histoire")}>Créer une histoire</button>
+<div className="home-container">
+  <h1>Mes histoires</h1>
+  <button className="create-button" onClick={() => navigate("/creer-histoire")}>
+    Créer une histoire
+  </button>
 
-      {histoires.length === 0 ? (
-        <p>Aucune histoire pour le moment.</p>
-      ) : (
-        <ul>
-          {histoires.map((h) => (
-            <li key={h.id} style={{ marginBottom: "1rem" }}>
-              <strong>{h.titre}</strong> — {h.statut} <br />
-              <button onClick={() => navigate(`/modifier-histoire/${h.id}`)}>Modifier</button>
-              <button onClick={() => handleDelete(h.id)}>Supprimer</button>
-              <button onClick={() => handleToggleStatut(h.id, h.statut)}>
-                {h.statut === "brouillon" ? "Publier" : "Mettre en brouillon"}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+  {histoires.length === 0 ? (
+    <p>Aucune histoire pour le moment.</p>
+  ) : (
+    <ul>
+      {histoires.map((h) => (
+        <li key={h.id}>
+          <strong>{h.titre}</strong>
+          <span className="status">{h.statut}</span>
+          <div className="actions">
+            <button onClick={() => navigate(`/modifier-histoire/${h.id}`)}>Modifier</button>
+            <button onClick={() => handleDelete(h.id)}>Supprimer</button>
+            <button onClick={() => handleToggleStatut(h.id, h.statut)}>
+              {h.statut === "brouillon" ? "Publier" : "Mettre en brouillon"}
+            </button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
+
   );
 }
 

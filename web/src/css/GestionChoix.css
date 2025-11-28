@@ -1,0 +1,194 @@
+/* GestionChoix.css */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-attachment: fixed;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.gestion-choix-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.gestion-choix-container h1 {
+  color: #fff;
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 2.5rem;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Carte principale */
+.gestion-card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+}
+
+/* Formulaire d'ajout */
+.choix-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2.5rem;
+}
+
+.choix-form input {
+  width: 100%;
+  padding: 0.9rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+
+  /* Texte en noir + curseur noir */
+  color: #000 !important;
+  caret-color: #000;
+}
+
+.choix-form input::placeholder {
+  color: #666;
+  opacity: 1;
+}
+
+.choix-form input:focus {
+  outline: none;
+  border-color: #667eea;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+  color: #000 !important;
+}
+
+.choix-form button {
+  align-self: flex-start;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.choix-form button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.choix-form button:active {
+  transform: translateY(0);
+}
+
+/* Liste des choix */
+.choix-list {
+  list-style: none;
+  padding: 0;
+}
+
+.choix-item {
+  background: #f8f9fa;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  border-left: 5px solid #667eea;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.choix-item:hover {
+  background: #eef0ff;
+  transform: translateX(5px);
+}
+
+.choix-item span {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.choix-item .page-dest {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.choix-item button {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.choix-item button:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+/* Bouton retour */
+.back-button {
+  display: block;
+  margin: 2rem auto 0;
+  padding: 0.9rem 2.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gestion-choix-container {
+    padding: 1rem;
+  }
+
+  .gestion-choix-container h1 {
+    font-size: 1.9rem;
+  }
+
+  .gestion-card {
+    padding: 1.5rem;
+  }
+
+  .choix-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .choix-form button,
+  .back-button {
+    width: 100%;
+  }
+}

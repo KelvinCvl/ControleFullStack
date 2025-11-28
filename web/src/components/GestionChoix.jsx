@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "../css/GestionChoix.css"
 
 function GestionChoix() {
-  const { pageId } = useParams(); // id de la page actuelle
+  const { pageId } = useParams(); 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const [choix, setChoix] = useState([]);
   const [texte, setTexte] = useState("");
   const [nextPageId, setNextPageId] = useState("");
 
-  // Récupérer tous les choix de la page
   useEffect(() => {
     const fetchChoix = async () => {
       try {
@@ -29,7 +31,6 @@ function GestionChoix() {
     fetchChoix();
   }, [pageId, token]);
 
-  // Créer un nouveau choix
   const handleCreate = async (e) => {
     e.preventDefault();
     if (!texte) {
@@ -59,7 +60,6 @@ function GestionChoix() {
     }
   };
 
-  // Supprimer un choix
   const handleDelete = async (id) => {
     if (!window.confirm("Supprimer ce choix ?")) return;
     try {
@@ -81,38 +81,45 @@ function GestionChoix() {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Gestion des choix</h1>
+    <div className="gestion-choix-container">
+      <h1>Gestion des choix de la page {pageId}</h1>
 
-      <form onSubmit={handleCreate} style={{ marginBottom: "2rem" }}>
-        <input
-          type="text"
-          placeholder="Texte du choix"
-          value={texte}
-          onChange={(e) => setTexte(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="ID de la page suivante (facultatif)"
-          value={nextPageId}
-          onChange={(e) => setNextPageId(e.target.value)}
-        />
-        <button type="submit">Ajouter le choix</button>
-      </form>
+      <div className="gestion-card">
+        <form onSubmit={handleCreate} className="choix-form">
+          <input
+            type="text"
+            placeholder="Texte du choix"
+            value={texte}
+            onChange={(e) => setTexte(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="ID de la page suivante (laisser vide = fin)"
+            value={nextPageId}
+            onChange={(e) => setNextPageId(e.target.value)}
+          />
+          <button type="submit">Ajouter le choix</button>
+        </form>
 
-      <h2>Choix existants</h2>
-      {choix.length === 0 ? (
-        <p>Aucun choix pour cette page</p>
-      ) : (
-        <ul>
-          {choix.map((c) => (
-            <li key={c.id} style={{ marginBottom: "1rem" }}>
-              {c.texte} — vers page {c.next_page_id || "fin"}{" "}
-              <button onClick={() => handleDelete(c.id)}>Supprimer</button>
-            </li>
-          ))}
-        </ul>
-      )}
+        <h2>Choix existants</h2>
+        {choix.length === 0 ? (
+          <p style={{ textAlign: "center", color: "#777" }}>Aucun choix pour cette page</p>
+        ) : (
+          <ul className="choix-list">
+            {choix.map((c) => (
+              <li key={c.id} className="choix-item">
+                <span>{c.texte}</span>
+                <span className="page-dest">→ Page {c.next_page_id || "FIN"}</span>
+                <button onClick={() => handleDelete(c.id)}>Supprimer</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <button onClick={() => navigate(-1)} className="back-button">
+        Retour
+      </button>
     </div>
   );
 }

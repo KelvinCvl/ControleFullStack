@@ -5,6 +5,7 @@ const histoireCtrl = require("../controllers/ControllerHistoire");
 
 router.post("/", verifyToken, histoireCtrl.create);
 router.get("/mes", verifyToken, histoireCtrl.getMine);
+router.get("/:id", verifyToken, histoireCtrl.getById);
 router.put("/:id", verifyToken, histoireCtrl.update);
 router.delete("/:id", verifyToken, histoireCtrl.remove);
 

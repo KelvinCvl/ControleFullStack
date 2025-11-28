@@ -1,4 +1,4 @@
-const pool = require("../db");
+const ServicePage = require("../services/ServicePage");
 
 exports.create = async (req, res) => {
   try {
@@ -8,12 +8,10 @@ exports.create = async (req, res) => {
       return res.status(400).json({ message: "histoire_id et contenu requis" });
     }
 
-    const [result] = await pool.query(
-      "INSERT INTO Page (histoire_id, contenu, isEnd) VALUES (?, ?, ?)",
-      [histoire_id, contenu, isEnd ? 1 : 0]
-    );
+    const [result] = await ServicePage.createPage(histoire_id, contenu, isEnd);
 
     res.status(201).json({ message: "Page créée", id: result.insertId });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
@@ -23,12 +21,7 @@ exports.create = async (req, res) => {
 exports.getAllForHistoire = async (req, res) => {
   try {
     const { histoireId } = req.params;
-
-    const [pages] = await pool.query(
-      "SELECT * FROM Page WHERE histoire_id = ?",
-      [histoireId]
-    );
-
+    const [pages] = await ServicePage.getAllForHistoire(histoireId);
     res.json(pages);
   } catch (err) {
     console.error(err);
@@ -41,15 +34,13 @@ exports.update = async (req, res) => {
     const { id } = req.params;
     const { contenu, isEnd } = req.body;
 
-    const [rows] = await pool.query("SELECT * FROM Page WHERE id = ?", [id]);
+    const [rows] = await ServicePage.getById(id);
     if (!rows.length) return res.status(404).json({ message: "Page non trouvée" });
 
-    await pool.query(
-      "UPDATE Page SET contenu = ?, isEnd = ? WHERE id = ?",
-      [contenu, isEnd ? 1 : 0, id]
-    );
+    await ServicePage.updatePage(id, contenu, isEnd);
 
     res.json({ message: "Page mise à jour" });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
@@ -59,8 +50,7 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
   try {
     const { id } = req.params;
-
-    await pool.query("DELETE FROM Page WHERE id = ?", [id]);
+    await ServicePage.deletePage(id);
     res.json({ message: "Page supprimée" });
   } catch (err) {
     console.error(err);

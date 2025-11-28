@@ -1,6 +1,6 @@
-const pool = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const ServiceAuth = require("../services/ServiceAuth");
 
 exports.inscription = async (req, res) => {
   try {
@@ -9,21 +9,16 @@ exports.inscription = async (req, res) => {
     if (!pseudo || !email || !motdepasse) {
       return res.status(400).json({ message: "Tous les champs sont requis" });
     }
-    const [rows] = await pool.query(
-      "SELECT id FROM Utilisateur WHERE email = ? OR pseudo = ?",
-      [email, pseudo]
-    );
+
+    const [rows] = await ServiceAuth.findUserByEmailOrPseudo(email, pseudo);
     if (rows.length) return res.status(400).json({ message: "Utilisateur déjà existant" });
 
     const hash = await bcrypt.hash(motdepasse, 10);
 
-    const [result] = await pool.query(
-      "INSERT INTO Utilisateur (pseudo, email, motdepasse) VALUES (?, ?, ?)",
-      [pseudo, email, hash]
-    );
+    const [result] = await ServiceAuth.createUser(pseudo, email, hash);
 
     res.status(201).json({ message: "Utilisateur créé", id: result.insertId });
-    
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
@@ -38,7 +33,7 @@ exports.connexion = async (req, res) => {
       return res.status(400).json({ message: "Tous les champs sont requis" });
     }
 
-    const [rows] = await pool.query("SELECT * FROM Utilisateur WHERE email = ?", [email]);
+    const [rows] = await ServiceAuth.findUserByEmail(email);
     if (!rows.length) return res.status(400).json({ message: "Email ou mot de passe incorrect" });
 
     const user = rows[0];
@@ -51,18 +46,16 @@ exports.connexion = async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
-    console.log("========== CRÉATION COOKIE ==========");
-    console.log("Token généré:", token);
-    console.log("====================================");
-
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "none",  
+      sameSite: "none",
       secure: false,
-      path: "/"          
+      path: "/"
     });
+
     res.json({ message: "Connecté", token });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });

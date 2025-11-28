@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import '../css/AuthForm.css';
 
 function AuthForm() {
   const [pseudo, setPseudo] = useState("");
@@ -43,37 +44,51 @@ function AuthForm() {
   };
 
   return (
-    <div>
-      <h1>Partage d'histoire</h1>
-      <div style={{ marginBottom: "1rem" }}>
-        <button onClick={() => setMode("inscription")}>Inscription</button>
-        <button onClick={() => setMode("connexion")}>Connexion</button>
-      </div>
+<div className="auth-container">
+  <h1>Partage d'histoire</h1>
 
-      <form onSubmit={handleSubmit}>
-        {mode === "inscription" && (
-          <input
-            type="text"
-            placeholder="Pseudo"
-            value={pseudo}
-            onChange={(e) => setPseudo(e.target.value)}
-          />
-        )}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          value={motdepasse}
-          onChange={(e) => setMotdepasse(e.target.value)}
-        />
-        <button type="submit">{mode === "inscription" ? "S'inscrire" : "Se connecter"}</button>
-      </form>
-    </div>
+  <div className="mode-buttons">
+    <button
+      className={mode === "inscription" ? "active" : ""}
+      onClick={() => setMode("inscription")}
+    >
+      Inscription
+    </button>
+    <button
+      className={mode === "connexion" ? "active" : ""}
+      onClick={() => setMode("connexion")}
+    >
+      Connexion
+    </button>
+  </div>
+
+  <form onSubmit={handleSubmit}>
+    {mode === "inscription" && (
+      <input
+        type="text"
+        placeholder="Pseudo"
+        value={pseudo}
+        onChange={(e) => setPseudo(e.target.value)}
+      />
+    )}
+    <input
+      type="email"
+      placeholder="Email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
+    <input
+      type="password"
+      placeholder="Mot de passe"
+      value={motdepasse}
+      onChange={(e) => setMotdepasse(e.target.value)}
+    />
+    <button type="submit">
+      {mode === "inscription" ? "S'inscrire" : "Se connecter"}
+    </button>
+  </form>
+</div>
+
   );
 }
 
