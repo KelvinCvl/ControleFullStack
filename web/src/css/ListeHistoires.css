@@ -1,0 +1,98 @@
+/* ToutesHistoires.css */
+
+.toutes-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.toutes-container h1 {
+  text-align: center;
+  color: #fff;
+  font-size: 2.8rem;
+  margin-bottom: 3rem;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+.histoires-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.histoire-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.histoire-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.histoire-card h2 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.auteur {
+  color: #7f8c8d;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.btn-lire {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-lire:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(102,126,234,0.4);
+}
+
+.aucune {
+  text-align: center;
+  color: #ddd;
+  font-size: 1.4rem;
+  margin: 4rem 0;
+}
+
+.btn-retour {
+  display: block;
+  margin: 3rem auto 0;
+  padding: 1rem 3rem;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.btn-retour:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.loading {
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+  padding: 4rem;
+}

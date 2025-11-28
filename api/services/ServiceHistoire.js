@@ -20,10 +20,7 @@ module.exports = {
   },
 
   getAuteur: (histoireId) => {
-    return pool.query(
-      "SELECT auteur_id FROM Histoire WHERE id = ?",
-      [histoireId]
-    );
+    return pool.query("SELECT auteur_id FROM Histoire WHERE id = ?", [histoireId]);
   },
 
   updateHistoire: (histoireId, titre, description, statut, pagedepart_id) => {
@@ -37,5 +34,38 @@ module.exports = {
 
   deleteHistoire: (histoireId) => {
     return pool.query("DELETE FROM Histoire WHERE id = ?", [histoireId]);
-  }
+  },
+
+  getAllPubliques: () => {
+    return pool.query(`
+      SELECT
+        h.id,
+        h.titre,
+        h.description,
+        u.pseudo AS auteur
+      FROM Histoire h
+      LEFT JOIN Utilisateur u ON h.auteur_id = u.id
+      WHERE h.statut = 'publié'
+      ORDER BY h.id DESC
+    `);
+  },
+
+  getOnePublic: (id) => {
+    return pool.query(
+      "SELECT id, titre, description FROM Histoire WHERE id = ? AND statut = 'publié'",
+      [id]
+    ); 
+  },
+
+  getDebutPage: async (histoireId) => {
+    const [rows] = await pool.query(
+      `SELECT id, contenu AS texte, isEnd 
+       FROM Page 
+       WHERE histoire_id = ? 
+       ORDER BY id ASC 
+       LIMIT 1`,
+      [histoireId]
+    );
+    return rows[0] || null;
+  },
 };

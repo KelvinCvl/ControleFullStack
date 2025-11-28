@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../css/CreerHistoire.css"; // Ajoute cette ligne
+import "../css/CreerHistoire.css"; 
 
 function CreerHistoire() {
   const [titre, setTitre] = useState("");
@@ -40,10 +40,10 @@ function CreerHistoire() {
   };
 
   return (
-    <div className="creer-container"> {/* Remplace style par className */}
+    <div className="creer-container"> 
       <h1>Créer une histoire</h1>
 
-      <form className="creer-form" onSubmit={handleSubmit}> {/* Ajoute className */}
+      <form className="creer-form" onSubmit={handleSubmit}> 
         <input
           type="text"
           placeholder="Titre"

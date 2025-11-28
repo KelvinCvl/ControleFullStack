@@ -94,7 +94,7 @@ function GestionChoix() {
           />
           <input
             type="text"
-            placeholder="ID de la page suivante (laisser vide = fin)"
+            placeholder="ID de la page suivante"
             value={nextPageId}
             onChange={(e) => setNextPageId(e.target.value)}
           />

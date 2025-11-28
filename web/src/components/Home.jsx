@@ -89,6 +89,13 @@ function Home() {
 
   return (
 <div className="home-container">
+  <button 
+  className="create-button" 
+  onClick={() => navigate("/toutes-histoires")}
+  style={{ marginLeft: "1rem", background: "#1a1b1aff" }}
+>
+  Voir toutes les histoires publiées
+</button>
   <h1>Mes histoires</h1>
   <button className="create-button" onClick={() => navigate("/creer-histoire")}>
     Créer une histoire

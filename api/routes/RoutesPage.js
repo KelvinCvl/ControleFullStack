@@ -3,6 +3,9 @@ const router = express.Router();
 const verifyToken = require("../middleware");
 const pageCtrl = require("../controllers/ControllerPage");
 
+router.get("/public/:id", pageCtrl.getOnePublic);        
+router.get("/choix/public/page/:pageId", pageCtrl.getChoixPublic); 
+
 router.post("/", verifyToken, pageCtrl.create);
 router.get("/:histoireId", verifyToken, pageCtrl.getAllForHistoire);
 router.put("/:id", verifyToken, pageCtrl.update);

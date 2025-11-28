@@ -54,7 +54,16 @@ exports.connexion = async (req, res) => {
       path: "/"
     });
 
-    res.json({ message: "Connecté", token });
+    res.json({ 
+      message: "Connecté", 
+      token,
+      user: {
+        id: user.id,
+        pseudo: user.pseudo,
+        email: user.email,
+        role: user.role
+      }
+    });
 
   } catch (err) {
     console.error(err);

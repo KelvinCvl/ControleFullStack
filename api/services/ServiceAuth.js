@@ -2,10 +2,7 @@ const pool = require("../db");
 
 module.exports = {
   findUserByEmailOrPseudo: (email, pseudo) => {
-    return pool.query(
-      "SELECT id FROM Utilisateur WHERE email = ? OR pseudo = ?",
-      [email, pseudo]
-    );
+    return pool.query("SELECT id FROM Utilisateur WHERE email = ? OR pseudo = ?", [email, pseudo]);
   },
 
   createUser: (pseudo, email, hash) => {

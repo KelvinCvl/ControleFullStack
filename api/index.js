@@ -5,6 +5,8 @@ const histoireRouter = require("./routes/RoutesHistoire");
 const authRouter = require("./routes/RoutesAuth");
 const pageRouter = require("./routes/RoutesPage");
 const choixRoutes = require("./routes/RoutesChoix");
+const statsRoutes = require("./routes/RoutesStats");
+
 const cookieParser = require("cookie-parser");
 
 dotenv.config();
@@ -24,5 +26,6 @@ app.use("/histoire", histoireRouter);
 app.use("/auth", authRouter);
 app.use("/page", pageRouter);
 app.use("/choix", choixRoutes);
+app.use("/statistique", statsRoutes);
 
 app.listen(PORT, () => console.log(`API running on port ${PORT}`));

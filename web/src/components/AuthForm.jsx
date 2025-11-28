@@ -29,10 +29,17 @@ function AuthForm() {
       const data = await res.json();
 
       if (res.ok) {
-        if (mode === "connexion" && data.token) {
+        if (mode === "connexion" && data.token && data.user) {
           localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
         }
-        
+
+        if (mode === "inscription") {
+          alert("Inscription réussie ! Connectez-vous.");
+          setMode("connexion");
+          return;
+        }
+
         navigate("/home");
       } else {
         alert(data.message);
@@ -44,51 +51,25 @@ function AuthForm() {
   };
 
   return (
-<div className="auth-container">
-  <h1>Partage d'histoire</h1>
-
-  <div className="mode-buttons">
-    <button
-      className={mode === "inscription" ? "active" : ""}
-      onClick={() => setMode("inscription")}
-    >
-      Inscription
-    </button>
-    <button
-      className={mode === "connexion" ? "active" : ""}
-      onClick={() => setMode("connexion")}
-    >
-      Connexion
-    </button>
-  </div>
-
-  <form onSubmit={handleSubmit}>
-    {mode === "inscription" && (
-      <input
-        type="text"
-        placeholder="Pseudo"
-        value={pseudo}
-        onChange={(e) => setPseudo(e.target.value)}
-      />
-    )}
-    <input
-      type="email"
-      placeholder="Email"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-    />
-    <input
-      type="password"
-      placeholder="Mot de passe"
-      value={motdepasse}
-      onChange={(e) => setMotdepasse(e.target.value)}
-    />
-    <button type="submit">
-      {mode === "inscription" ? "S'inscrire" : "Se connecter"}
-    </button>
-  </form>
-</div>
-
+    <div className="auth-container">
+      <h1>Partage d'histoire</h1>
+      <div className="mode-buttons">
+        <button className={mode === "inscription" ? "active" : ""} onClick={() => setMode("inscription")}>
+          Inscription
+        </button>
+        <button className={mode === "connexion" ? "active" : ""} onClick={() => setMode("connexion")}>
+          Connexion
+        </button>
+      </div>
+      <form onSubmit={handleSubmit}>
+        {mode === "inscription" && (
+          <input type="text" placeholder="Pseudo" value={pseudo} onChange={(e) => setPseudo(e.target.value)} />
+        )}
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Mot de passe" value={motdepasse} onChange={(e) => setMotdepasse(e.target.value)} />
+        <button type="submit">{mode === "inscription" ? "S'inscrire" : "Se connecter"}</button>
+      </form>
+    </div>
   );
 }
 
