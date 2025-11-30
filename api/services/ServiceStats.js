@@ -1,43 +1,79 @@
 const pool = require("../db");
+const ServicePage = require("./ServicePage");
 
-//oui j'ai galéré ici
 module.exports = {
   create: async (utilisateur_id, histoire_id, pagefinale_id) => {
     try {
-      console.log("🔧 ServiceStats.create appelé avec :");
-      console.log("  - utilisateur_id:", utilisateur_id);
-      console.log("  - histoire_id:", histoire_id);
-      console.log("  - pagefinale_id:", pagefinale_id);
+      const [pageRows] = await ServicePage.getById(pagefinale_id);
+      const typeFin = pageRows.length && pageRows[0].nomFin ? pageRows[0].nomFin : null;
 
       const [result] = await pool.query(
-        `INSERT INTO statistique (utilisateur_id, histoire_id, pagefinale_id, datecreation)
-         VALUES (?, ?, ?, NOW())`,
-        [utilisateur_id, histoire_id, pagefinale_id]
+        `INSERT INTO statistique 
+         (utilisateur_id, histoire_id, pagefinale_id, typeFin, datecreation)
+         VALUES (?, ?, ?, ?, NOW())`,
+        [utilisateur_id, histoire_id, pagefinale_id, typeFin]
       );
-      
-      console.log("✅ Insert réussi:", result);
+
       return result;
     } catch (err) {
-      console.error("❌ Erreur SQL complète:", err);
-      console.error("❌ Code erreur:", err.code);
-      console.error("❌ Message SQL:", err.sqlMessage);
+      console.error("Erreur ServiceStats.create :", err);
       throw err;
     }
   },
 
-    getFinParHistoire: async (histoireId) => {
+  getFinParUtilisateur: async (utilisateurId) => {
     try {
       const [rows] = await pool.query(
-        `SELECT h.id AS histoire_id, h.titre, COUNT(s.id) AS count
-         FROM histoire h
-         LEFT JOIN statistique s ON h.id = s.histoire_id
-         WHERE h.id = ?
-         GROUP BY h.id, h.titre`,
+        `SELECT 
+           h.id AS histoire_id,
+           h.titre,
+           s.typeFin,
+           s.datecreation
+         FROM statistique s
+         INNER JOIN histoire h ON s.histoire_id = h.id
+         WHERE s.utilisateur_id = ?
+           AND s.typeFin IS NOT NULL
+         ORDER BY s.datecreation DESC`,
+        [utilisateurId]
+      );
+
+      const stats = {};
+
+      rows.forEach((row) => {
+        const histoireId = String(row.histoire_id); 
+
+        if (!stats[histoireId]) {
+          stats[histoireId] = {
+            titre: row.titre,
+            finsAtteintes: [],
+          };
+        }
+
+        stats[histoireId].finsAtteintes.push({
+          typeFin: row.typeFin,
+          date: row.datecreation,
+        });
+      });
+
+      return stats;
+    } catch (err) {
+      console.error("Erreur ServiceStats.getFinParUtilisateur :", err);
+      throw err;
+    }
+  },
+
+  getFinParHistoire: async (histoireId) => {
+    try {
+      const [rows] = await pool.query(
+        `SELECT typeFin, COUNT(*) as nombre
+         FROM statistique
+         WHERE histoire_id = ? AND typeFin IS NOT NULL
+         GROUP BY typeFin`,
         [histoireId]
       );
-      return rows[0] || { histoire_id: histoireId, titre: "Inconnu", count: 0 };
+      return rows;
     } catch (err) {
-      console.error("Erreur SQL ServiceStats.getFinParHistoire :", err);
+      console.error("Erreur ServiceStats.getFinParHistoire :", err);
       throw err;
     }
   },

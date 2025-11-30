@@ -27,7 +27,7 @@ app.use("/histoire", histoireRouter);
 app.use("/auth", authRouter);
 app.use("/page", pageRouter);
 app.use("/choix", choixRoutes);
-app.use("/statistiques", statsRoutes);
+app.use("/stats", statsRoutes);
 app.use("/admin", adminRoutes);
 
 app.listen(PORT, () => console.log(`API running on port ${PORT}`));

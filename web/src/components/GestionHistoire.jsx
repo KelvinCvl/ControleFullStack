@@ -10,6 +10,9 @@ function GestionHistoire() {
   const [pages, setPages] = useState([]);
   const [contenu, setContenu] = useState("");
   const [fin, setFin] = useState(false);
+  const [nomFin, setNomFin] = useState("Fin Héroïque");
+
+  const finOptions = ["Fin Héroïque", "Fin Tragique"];
 
   useEffect(() => {
     if (!token) return;
@@ -31,19 +34,26 @@ function GestionHistoire() {
   const handleCreatePage = async (e) => {
     e.preventDefault();
     if (!contenu) return alert("Le contenu est requis");
+    if (fin && !nomFin) return alert("Le type de fin est requis pour une page de fin");
 
     try {
       const res = await fetch("http://localhost:5000/page", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: token },
-        body: JSON.stringify({ histoire_id: histoireId, contenu, isEnd: fin }),
+        body: JSON.stringify({
+          histoire_id: histoireId,
+          contenu,
+          isEnd: fin,
+          nomFin: fin ? nomFin : null,
+        }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        setPages([...pages, data]);
+        setPages([...pages, { ...data, contenu, isEnd: fin, nomFin: fin ? nomFin : null }]);
         setContenu("");
         setFin(false);
+        setNomFin("Fin Héroïque");
       } else alert(data.message);
     } catch (err) {
       console.error(err);
@@ -68,16 +78,37 @@ function GestionHistoire() {
   const handleEditPage = async (page) => {
     const nouveauContenu = prompt("Modifier le contenu de la page", page.contenu);
     if (nouveauContenu === null) return;
+
     const nouveauFin = window.confirm("Cette page est-elle une fin ?");
+    let nouveauNomFin = null;
+    if (nouveauFin) {
+      nouveauNomFin = prompt(
+        "Type de fin (Fin Héroïque / Fin Tragique)",
+        page.nomFin || "Fin Héroïque"
+      );
+      if (!nouveauNomFin || !finOptions.includes(nouveauNomFin)) {
+        return alert("Type de fin invalide");
+      }
+    }
 
     try {
       const res = await fetch(`http://localhost:5000/page/${page.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: token },
-        body: JSON.stringify({ contenu: nouveauContenu, isEnd: nouveauFin }),
+        body: JSON.stringify({
+          contenu: nouveauContenu,
+          isEnd: nouveauFin,
+          nomFin: nouveauFin ? nouveauNomFin : null,
+        }),
       });
       if (res.ok) {
-        setPages(pages.map((p) => p.id === page.id ? { ...p, contenu: nouveauContenu, isEnd: nouveauFin } : p));
+        setPages(
+          pages.map((p) =>
+            p.id === page.id
+              ? { ...p, contenu: nouveauContenu, isEnd: nouveauFin, nomFin: nouveauFin ? nouveauNomFin : null }
+              : p
+          )
+        );
       }
     } catch (err) {
       console.error(err);
@@ -96,11 +127,25 @@ function GestionHistoire() {
           value={contenu}
           onChange={(e) => setContenu(e.target.value)}
         />
+
         <label className="gestion-label">
           <input type="checkbox" checked={fin} onChange={(e) => setFin(e.target.checked)} />
           Page de fin
         </label>
-        <button type="submit" className="gestion-button">Créer la page</button>
+
+        {fin && (
+          <select value={nomFin} onChange={(e) => setNomFin(e.target.value)} className="gestion-select">
+            {finOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        )}
+
+        <button type="submit" className="gestion-button">
+          Créer la page
+        </button>
       </form>
 
       <h2>Pages existantes</h2>
@@ -110,7 +155,9 @@ function GestionHistoire() {
         <ul className="gestion-list">
           {pages.map((p, i) => (
             <li key={p.id} className="gestion-item">
-              <span className="page-info">Page #{i+1} — {p.isEnd ? "Fin" : "Non fin"}</span>
+              <span className="page-info">
+                Page #{i + 1} — {p.isEnd ? `Fin (${p.nomFin})` : "Non fin"}
+              </span>
               <div className="actions">
                 <button onClick={() => handleEditPage(p)}>Modifier</button>
                 <button onClick={() => handleDeletePage(p.id)}>Supprimer</button>
@@ -121,7 +168,9 @@ function GestionHistoire() {
         </ul>
       )}
 
-      <button className="back-button" onClick={() => navigate(`/modifier-histoire/${histoireId}`)}>Retour</button>
+      <button className="back-button" onClick={() => navigate(`/modifier-histoire/${histoireId}`)}>
+        Retour
+      </button>
     </div>
   );
 }

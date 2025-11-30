@@ -93,7 +93,7 @@ export default function LireHistoire() {
       console.log("  - pagefinale_id:", pagefinale_id, "type:", typeof pagefinale_id);
       console.log("📦 Payload complet:", payload);
 
-      const res = await fetch("http://localhost:5000/statistique", {
+      const res = await fetch("http://localhost:5000/statistiques", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

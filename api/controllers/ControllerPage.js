@@ -2,21 +2,24 @@ const ServicePage = require("../services/ServicePage");
 
 exports.create = async (req, res) => {
   try {
-    const { histoire_id, contenu, isEnd } = req.body;
+    const { histoire_id, contenu, isEnd, nomFin } = req.body;
 
     if (!histoire_id || !contenu) {
       return res.status(400).json({ message: "histoire_id et contenu requis" });
     }
 
-    const [result] = await ServicePage.createPage(histoire_id, contenu, isEnd);
+    if (isEnd && !nomFin) {
+      return res.status(400).json({ message: "nomFin requis pour une page de fin" });
+    }
 
+    const [result] = await ServicePage.createPage(histoire_id, contenu, isEnd, nomFin);
     res.status(201).json({ message: "Page créée", id: result.insertId });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
 
 exports.getAllForHistoire = async (req, res) => {
   try {
@@ -32,20 +35,23 @@ exports.getAllForHistoire = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const { id } = req.params;
-    const { contenu, isEnd } = req.body;
+    const { contenu, isEnd, nomFin } = req.body;
 
     const [rows] = await ServicePage.getById(id);
     if (!rows.length) return res.status(404).json({ message: "Page non trouvée" });
 
-    await ServicePage.updatePage(id, contenu, isEnd);
+    if (isEnd && !nomFin) {
+      return res.status(400).json({ message: "nomFin requis pour une page de fin" });
+    }
 
+    await ServicePage.updatePage(id, contenu, isEnd, nomFin);
     res.json({ message: "Page mise à jour" });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
 
 exports.remove = async (req, res) => {
   try {

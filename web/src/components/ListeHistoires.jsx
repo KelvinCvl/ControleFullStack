@@ -4,25 +4,41 @@ import "../css/ListeHistoires.css";
 
 function ListeHistoires() {
   const [histoires, setHistoires] = useState([]);
+  const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const userStr = localStorage.getItem("user");
+  const user = userStr ? JSON.parse(userStr) : null;
+
   useEffect(() => {
-    fetch("http://localhost:5000/histoire/publiques")
-      .then((res) => res.json())
-      .then((data) => {
-        setHistoires(data);
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
+    const fetchHistoires = fetch("http://localhost:5000/histoire/publiques").then((res) =>
+      res.json()
+    );
+
+    const fetchStats = fetch(`http://localhost:5000/stats/utilisateur/${user.id}`).then((res) =>
+      res.json()
+    );
+
+    Promise.all([fetchHistoires, fetchStats])
+      .then(([histData, statsData]) => {
+        setHistoires(histData);
+        setStats(statsData); 
         setLoading(false);
       })
-      .catch(() => {
-        alert("Erreur lors du chargement des histoires");
+      .catch((err) => {
+        console.error("Erreur fetch :", err);
+        alert("Erreur lors du chargement");
         setLoading(false);
       });
-  }, []);
+  }, [navigate, user]);
 
-  if (loading) {
-    return <div className="loading">Chargement des histoires...</div>;
-  }
+  if (loading) return <div className="loading">Chargement des histoires...</div>;
 
   return (
     <div className="toutes-container">
@@ -36,6 +52,17 @@ function ListeHistoires() {
             <div key={h.id} className="histoire-card">
               <h2>{h.titre}</h2>
               <p className="auteur">par {h.auteur || "Anonyme"}</p>
+
+              {stats[h.id]?.finsAtteintes?.length > 0 && (
+                <p className="fins-user">
+                  Fins atteintes :{" "}
+                  {stats[h.id].finsAtteintes
+                    .map((f) => f.typeFin)
+                    .filter(Boolean)
+                    .join(", ")}
+                </p>
+              )}
+
               <button
                 className="btn-lire"
                 onClick={() => navigate(`/lire-histoire/${h.id}`)}
