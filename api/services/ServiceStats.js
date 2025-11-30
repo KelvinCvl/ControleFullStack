@@ -24,4 +24,21 @@ module.exports = {
       throw err;
     }
   },
+
+    getFinParHistoire: async (histoireId) => {
+    try {
+      const [rows] = await pool.query(
+        `SELECT h.id AS histoire_id, h.titre, COUNT(s.id) AS count
+         FROM histoire h
+         LEFT JOIN statistique s ON h.id = s.histoire_id
+         WHERE h.id = ?
+         GROUP BY h.id, h.titre`,
+        [histoireId]
+      );
+      return rows[0] || { histoire_id: histoireId, titre: "Inconnu", count: 0 };
+    } catch (err) {
+      console.error("Erreur SQL ServiceStats.getFinParHistoire :", err);
+      throw err;
+    }
+  },
 };
