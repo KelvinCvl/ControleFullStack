@@ -6,7 +6,8 @@ import ModifierHistoire from "./components/ModifierHistoire";
 import GestionHistoire from "./components/GestionHistoire";
 import GestionChoix from "./components/GestionChoix";
 import ListeHistoires from "./components/ListeHistoires";
-import LireHistoire from "./components/LireHistoire"
+import LireHistoire from "./components/LireHistoire";
+import Statistiques from "./components/Statistiques"
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route path="/gestion-choix/:pageId" element={<GestionChoix />} />
       <Route path="/toutes-histoires" element={<ListeHistoires />} />
       <Route path="/lire-histoire/:histoireId" element={<LireHistoire />} />
+      <Route path="/statistiques/:id" element={<Statistiques />} />
     </Routes>
   );
 }

@@ -18,3 +18,14 @@ exports.create = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
+exports.getStatHistoire = async (req, res) => {
+  try {
+    const { histoireId } = req.params;
+    const result = await ServiceStatistique.getFinParHistoire(histoireId);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("Erreur ControllerStats.getStatHistoire :", err);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
