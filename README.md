@@ -9,6 +9,18 @@ ce que laetitia doit faire :
   * nombre de fois qu’une fin a été atteinte,
   * nombre total de parties jouées.
 
+tout est fait dans ma partie : 
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=root
+DB_NAME=controlefullstack
+DB_PORT=3306
+
+JWT_SECRET=monsecretdev
+JWT_EXPIRES_IN=1d
+
+
 * Statistiques de parcours :
 
   * en fin de partie : « Vous avez pris le même chemin que X % des joueurs »,
