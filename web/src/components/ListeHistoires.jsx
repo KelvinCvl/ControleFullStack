@@ -2,83 +2,103 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/ListeHistoires.css";
 
-function ListeHistoires() {
+export default function ListeHistoires() {
   const [histoires, setHistoires] = useState([]);
-  const [stats, setStats] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [themes, setThemes] = useState([]);
+  const [themeSelectionne, setThemeSelectionne] = useState("");
+  const [recherche, setRecherche] = useState("");
   const navigate = useNavigate();
 
-  const userStr = localStorage.getItem("user");
-  const user = userStr ? JSON.parse(userStr) : null;
-
+  // Charger tous les thèmes
   useEffect(() => {
-    if (!user) {
-      navigate("/auth");
-      return;
+    fetch("http://localhost:5000/histoire/themes")
+      .then(res => res.json())
+      .then(data => {
+        const themesUniques = data.map(item => item.theme).filter(Boolean);
+        setThemes(themesUniques);
+      })
+      .catch(err => console.error("Erreur chargement thèmes:", err));
+  }, []);
+
+  // Charger les histoires en fonction du filtre
+  useEffect(() => {
+    let url = "http://localhost:5000/histoire/publiques";
+    
+    if (themeSelectionne) {
+      url = `http://localhost:5000/histoire/theme/${encodeURIComponent(themeSelectionne)}`;
     }
 
-    const fetchHistoires = fetch("http://localhost:5000/histoire/publiques").then((res) =>
-      res.json()
-    );
-
-    const fetchStats = fetch(`http://localhost:5000/stats/utilisateur/${user.id}`).then((res) =>
-      res.json()
-    );
-
-    Promise.all([fetchHistoires, fetchStats])
-      .then(([histData, statsData]) => {
-        setHistoires(histData);
-        setStats(statsData); 
-        setLoading(false);
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        let filtered = data;
+        if (recherche) {
+          filtered = data.filter(h =>
+            h.titre.toLowerCase().includes(recherche.toLowerCase()) ||
+            h.description?.toLowerCase().includes(recherche.toLowerCase())
+          );
+        }
+        setHistoires(filtered);
       })
-      .catch((err) => {
-        console.error("Erreur fetch :", err);
-        alert("Erreur lors du chargement");
-        setLoading(false);
-      });
-  }, [navigate, user]);
-
-  if (loading) return <div className="loading">Chargement des histoires...</div>;
+      .catch(err => console.error("Erreur chargement histoires:", err));
+  }, [themeSelectionne, recherche]);
 
   return (
-    <div className="toutes-container">
-      <h1>Toutes les histoires publiées</h1>
+    <div className="liste-container">
+      <div style={{ marginBottom: "1rem" }}>
+        <button 
+          onClick={() => navigate("/home")} 
+          className="create-button"
+          style={{ background: "#3498db" }}
+        >
+          ← Retour à l'accueil
+        </button>
+      </div>
+      <h1>📚 Toutes les Histoires</h1>
+
+      <div className="filtres">
+        <input
+          type="text"
+          placeholder="🔍 Rechercher une histoire..."
+          value={recherche}
+          onChange={(e) => setRecherche(e.target.value)}
+          className="search-input"
+        />
+
+        <select
+          value={themeSelectionne}
+          onChange={(e) => setThemeSelectionne(e.target.value)}
+          className="theme-filter"
+        >
+          <option value="">Tous les thèmes</option>
+          {themes.map((theme, idx) => (
+            <option key={`theme-${idx}`} value={theme}>
+              {theme}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {histoires.length === 0 ? (
-        <p className="aucune">Aucune histoire publiée pour le moment.</p>
+        <p className="no-results">Aucune histoire trouvée</p>
       ) : (
         <div className="histoires-grid">
-          {histoires.map((h) => (
-            <div key={h.id} className="histoire-card">
-              <h2>{h.titre}</h2>
-              <p className="auteur">par {h.auteur || "Anonyme"}</p>
-
-              {stats[h.id]?.finsAtteintes?.length > 0 && (
-                <p className="fins-user">
-                  Fins atteintes :{" "}
-                  {stats[h.id].finsAtteintes
-                    .map((f) => f.typeFin)
-                    .filter(Boolean)
-                    .join(", ")}
-                </p>
-              )}
-
+          {histoires.map((histoire, idx) => (
+            <div key={`histoire-${histoire.id}-${idx}`} className="histoire-card">
+              <h3>{histoire.titre}</h3>
+              {histoire.theme && <span className="theme-badge">🏷️ {histoire.theme}</span>}
+              <p className="auteur">Par: {histoire.auteur || "Anonyme"}</p>
+              <p className="description">{histoire.description || "Pas de description"}</p>
               <button
-                className="btn-lire"
-                onClick={() => navigate(`/lire-histoire/${h.id}`)}
+                onClick={() => navigate(`/lire/${histoire.id}`)}
+                className="lire-button"
               >
-                Lire l'histoire
+                📖 Lire l'histoire
               </button>
             </div>
           ))}
         </div>
       )}
-
-      <button className="btn-retour" onClick={() => navigate("/home")}>
-        Retour à mon espace
-      </button>
     </div>
   );
 }
-
-export default ListeHistoires;

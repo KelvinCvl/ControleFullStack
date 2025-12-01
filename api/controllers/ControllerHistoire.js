@@ -1,113 +1,144 @@
 const ServiceHistoire = require("../services/ServiceHistoire");
 
-exports.create = async (req, res) => {
-  try {
-    const { titre, description } = req.body;
-    const userId = req.user.id;
-
-    if (!titre || !description) {
-      return res.status(400).json({ message: "Titre et description requis" });
-    }
-
-    const [result] = await ServiceHistoire.createHistoire(titre, description, userId);
-    res.status(201).json({ message: "Histoire créée", id: result.insertId });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
-};
-
+// 📌 GET /histoire/mine
 exports.getMine = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const [rows] = await ServiceHistoire.getMine(userId);
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
-};
-
-exports.getById = async (req, res) => {
-  try {
-    const histoireId = req.params.id;
-    const userId = req.user.id;
-    const [rows] = await ServiceHistoire.getById(histoireId, userId);
-    if (!rows.length) return res.status(404).json({ message: "Histoire non trouvée" });
-    res.json(rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
-};
-
-exports.update = async (req, res) => {
-  try {
-    const histoireId = req.params.id;
-    const userId = req.user.id;
-    const { titre, description, statut, pagedepart_id } = req.body;
-
-    const [rows] = await ServiceHistoire.getAuteur(histoireId);
-    if (!rows.length || rows[0].auteur_id !== userId) {
-      return res.status(403).json({ message: "Non autorisé" });
+    try {
+        const auteurId = req.user.id;
+        const [histoires] = await ServiceHistoire.getMine(auteurId);
+        res.json(histoires);
+    } catch (error) {
+        console.error("Erreur getMine :", error);
+        res.status(500).json({ error: "Erreur lors de la récupération des histoires" });
     }
-
-    await ServiceHistoire.updateHistoire(histoireId, titre, description, statut, pagedepart_id);
-    res.json({ message: "Histoire mise à jour" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
 };
 
-exports.remove = async (req, res) => {
-  try {
-    const histoireId = req.params.id;
-    const userId = req.user.id;
-
-    const [rows] = await ServiceHistoire.getAuteur(histoireId);
-    if (!rows.length || rows[0].auteur_id !== userId) {
-      return res.status(403).json({ message: "Non autorisé" });
-    }
-
-    await ServiceHistoire.deleteHistoire(histoireId);
-    res.json({ message: "Histoire supprimée" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
-};
-
+// 📌 GET /histoire/publiques
 exports.getAllPubliques = async (req, res) => {
-  try {
-    const [rows] = await ServiceHistoire.getAllPubliques();
-    res.json(rows);
-  } catch (err) {
-    console.error("Erreur /histoire/publiques :", err);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
+    try {
+        const [histoires] = await ServiceHistoire.getAllPubliques();
+        res.json(histoires);
+    } catch (error) {
+        console.error("Erreur getAllPubliques :", error);
+        res.status(500).json({ error: "Erreur lors de la récupération des histoires publiées" });
+    }
 };
 
+// 📌 GET /histoire/publiques/theme/:theme
+exports.getByTheme = async (req, res) => {
+    try {
+        const { theme } = req.params;
+        const [histoires] = await ServiceHistoire.getAllPubliquesByTheme(theme);
+        res.json(histoires);
+    } catch (error) {
+        console.error("Erreur getByTheme :", error);
+        res.status(500).json({ error: "Erreur lors de la récupération des histoires" });
+    }
+};
+
+// 📌 GET /histoire/themes
+exports.getAllThemes = async (req, res) => {
+    try {
+        const [themes] = await ServiceHistoire.getAllThemes();
+        res.json(themes);
+    } catch (error) {
+        console.error("Erreur getAllThemes :", error);
+        res.status(500).json({ error: "Erreur lors de la récupération des thèmes" });
+    }
+};
+
+// 📌 POST /histoire
+exports.create = async (req, res) => {
+    try {
+        const data = {
+            titre: req.body.titre,
+            description: req.body.description,
+            statut: req.body.statut || "brouillon",
+            pagedepart_id: req.body.pagedepart_id || null,
+            auteur_id: req.user.id,
+            theme: req.body.theme || null
+        };
+
+        const result = await ServiceHistoire.create(data);
+        res.json({ message: "Histoire créée", id: result.insertId });
+
+    } catch (error) {
+        console.error("Erreur create :", error);
+        res.status(500).json({ error: "Impossible de créer l'histoire" });
+    }
+};
+
+// 📌 GET /histoire/:id
+exports.getById = async (req, res) => {
+    try {
+        const [histoire] = await ServiceHistoire.getById(req.params.id);
+        if (!histoire.length) {
+            return res.status(404).json({ error: "Histoire non trouvée" });
+        }
+        res.json(histoire[0]);
+    } catch (error) {
+        console.error("Erreur getById :", error);
+        res.status(500).json({ error: "Erreur lors de la récupération de l'histoire" });
+    }
+};
+
+// 📌 PUT /histoire/:id
+exports.update = async (req, res) => {
+    try {
+        const data = {
+            titre: req.body.titre || "",
+            description: req.body.description || "",
+            statut: req.body.statut || "brouillon",
+            pagedepart_id: req.body.pagedepart_id || null,
+            theme: req.body.theme || null
+        };
+
+        await ServiceHistoire.update(req.params.id, data);
+        res.json({ message: "Histoire mise à jour" });
+    } catch (error) {
+        console.error("Erreur update :", error);
+        res.status(500).json({ error: "Erreur lors de la mise à jour" });
+    }
+};
+
+// 📌 DELETE /histoire/:id
+exports.delete = async (req, res) => {
+    try {
+        await ServiceHistoire.delete(req.params.id);
+        res.json({ message: "Histoire supprimée" });
+    } catch (error) {
+        console.error("Erreur delete :", error);
+        res.status(500).json({ error: "Erreur lors de la suppression" });
+    }
+};
+
+// 📌 GET /histoire/:id/debut (PUBLIC)
 exports.getDebutPublic = async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+        const [result] = await ServiceHistoire.getDebutPublic(req.params.id);
+        if (!result.length) {
+            return res.status(404).json({ error: "Histoire non trouvée ou non publiée" });
+        }
 
-    const [histoireRows] = await ServiceHistoire.getOnePublic(id);
-    if (!histoireRows.length) {
-      return res.status(404).json({ message: "Histoire non trouvée ou non publiée" });
+        const data = result[0];
+        const histoire = {
+            id: data.id,
+            titre: data.titre,
+            description: data.description,
+            theme: data.theme,
+            auteur: data.auteur
+        };
+
+        // Si pas de page de départ, retourner null pour page
+        const page = data.page_id ? {
+            id: data.page_id,
+            contenu: data.contenu,
+            isEnd: data.isEnd
+        } : null;
+
+        res.json({ histoire, page });
+    } catch (error) {
+        console.error("Erreur getDebutPublic :", error);
+        res.status(500).json({ error: "Erreur lors de la récupération" });
     }
-
-    const debutPage = await ServiceHistoire.getDebutPage(id);
-    if (!debutPage) {
-      return res.status(404).json({ message: "Aucune page de départ" });
-    }
-
-    res.json({
-      histoire: histoireRows[0],
-      page: debutPage,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
 };
+

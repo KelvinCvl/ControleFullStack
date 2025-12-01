@@ -19,6 +19,7 @@ function App() {
       <Route path="/gestion-histoire/:id" element={<GestionHistoire />} />
       <Route path="/gestion-choix/:pageId" element={<GestionChoix />} />
       <Route path="/toutes-histoires" element={<ListeHistoires />} />
+      <Route path="/lire/:histoireId" element={<LireHistoire />} />
       <Route path="/lire-histoire/:histoireId" element={<LireHistoire />} />
       <Route path="/statistiques/:id" element={<Statistiques />} />
     </Routes>

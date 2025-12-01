@@ -1,117 +1,109 @@
-/* CreerHistoire.css */
+/* src/css/CreerHistoire.css */
 
+/* RESET */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-attachment: fixed;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
+  background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+  color: #fff;
 }
 
+/* CONTAINER GLOBAL */
 .creer-container {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 3rem auto;
+  padding: 1rem;
 }
 
 .creer-container h1 {
   color: #fff;
   text-align: center;
   font-size: 2rem;
-  margin-bottom: 2rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1.5rem;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
 }
 
-/* Formulaire */
-.creer-form {
-  background: #fff;
-  padding: 2rem;
+/* FORMULAIRE */
+.form-creer-histoire {
+  background: #ffffff;
+  padding: 1.75rem;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-/* Inputs & Textarea */
-.creer-form input[type="text"],
-.creer-form textarea {
+/* INPUTS & TEXTAREAS */
+.input,
+.textarea {
   width: 100%;
-  padding: 0.875rem;
-  margin-bottom: 1.25rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  background-color: #f8f9fa;
-  transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-
-  /* Texte tapé en noir + curseur noir */
-  color: #000000 !important;
-  caret-color: #000000;
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 2px solid #e6e6e6;
+  background: #fbfbff;
+  transition: all 0.18s ease;
+  color: #111 !important;
 }
 
-/* Placeholder gris foncé et toujours visible */
-.creer-form input[type="text"]::placeholder,
-.creer-form textarea::placeholder {
-  color: #555;
-  opacity: 1;
-}
-
-/* États au focus */
-.creer-form input[type="text"]:focus,
-.creer-form textarea:focus {
-  outline: none;
-  border-color: #667eea;
-  background-color: #fff;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-
-  /* On force le texte à rester noir même au focus */
-  color: #000000 !important;
-  caret-color: #000000;
-}
-
-.creer-form textarea {
+.textarea {
   min-height: 120px;
   resize: vertical;
 }
 
-/* Bouton submit */
-.creer-form button[type="submit"] {
+.input::placeholder,
+.textarea::placeholder {
+  color: #666;
+}
+
+/* FOCUS */
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 6px 20px rgba(102,126,234,0.12);
+}
+
+/* MESSAGE */
+.message {
+  text-align: center;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255,255,255,0.06);
+  color: #ffe;
+  border-radius: 6px;
+}
+
+/* BOUTON */
+.btn-creer {
   width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  padding: 12px;
   border: none;
-  padding: 1rem;
-  border-radius: 8px;
-  font-size: 1.05rem;
-  font-weight: 600;
+  border-radius: 10px;
+  font-size: 16px;
+  background: linear-gradient(90deg,#6a82fb,#512da8);
+  color: #fff;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-.creer-form button[type="submit"]:hover {
+.btn-creer:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 24px rgba(81,45,168,0.2);
 }
 
-.creer-form button[type="submit"]:active {
-  transform: translateY(0);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+/* RESPONSIVE */
+@media (max-width: 600px) {
   .creer-container {
     padding: 1rem;
   }
 
   .creer-container h1 {
-    font-size: 1.75rem;
-  }
-
-  .creer-form {
-    padding: 1.5rem;
+    font-size: 1.6rem;
   }
 }

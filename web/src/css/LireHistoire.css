@@ -60,11 +60,93 @@
 
 .fin-histoire {
   text-align: center;
-  padding: 4rem;
+  padding: 3rem;
   background: linear-gradient(135deg, #2c3e50, #34495e);
   color: white;
   border-radius: 16px;
   font-size: 1.5rem;
+}
+
+.stats-fin {
+  margin: 2rem 0;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: left;
+  color: white;
+}
+
+.stat-box {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 2rem;
+  border-radius: 12px;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  margin: 1.5rem 0;
+  font-size: 1rem;
+}
+
+.stat-box h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.stat-box h4 {
+  margin: 1.5rem 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.repartition {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.fin-stat {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.fin-stat span {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2ecc71, #27ae60);
+  transition: width 0.4s ease;
+}
+
+.fin-stat small {
+  display: block;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}
+
+.total-parties {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .actions-bas {
@@ -91,9 +173,35 @@
 
 .btn-retour:hover { background: #c0392b; }
 
+.btn-rejouer {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  margin-top: 2rem;
+}
+
+.btn-rejouer:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(46, 204, 113, 0.4);
+}
+
 .loading {
   text-align: center;
   font-size: 1.8rem;
   color: white;
   padding: 5rem;
 }
+
+.btn-quitter {
+  background: #3498db;
+  color: white;
+  border: none;
+}
+
+.btn-quitter:hover { background: #2980b9; }

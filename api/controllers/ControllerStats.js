@@ -38,3 +38,29 @@ exports.getStatHistoire = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
+// ➕ NOUVELLES ROUTES
+
+// GET /stats/simples/:histoireId - Stats simples (nombre fins + total parties)
+exports.getStatistiquesSimples = async (req, res) => {
+  try {
+    const { histoireId } = req.params;
+    const stats = await ServiceStats.getStatistiquesSimples(histoireId);
+    res.json(stats);
+  } catch (err) {
+    console.error("Erreur stats simples :", err);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+// GET /stats/parcours/:histoireId/:pageFinaleId - Stats parcours
+exports.getStatistiquesParcours = async (req, res) => {
+  try {
+    const { histoireId, pageFinaleId } = req.params;
+    const stats = await ServiceStats.getStatistiquesParcours(histoireId, pageFinaleId);
+    res.json(stats);
+  } catch (err) {
+    console.error("Erreur stats parcours :", err);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
