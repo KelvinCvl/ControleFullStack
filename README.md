@@ -1,4 +1,4 @@
-Projet NABH
+Projet NAHB (Not Another Hero's Book)
 
 C'est une plateforme web fullstack permettant de créer, gérer et jouer des histoires interactives, inspirée des livres dont vous êtes le héros.
 
