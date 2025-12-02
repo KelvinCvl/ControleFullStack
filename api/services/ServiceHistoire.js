@@ -1,47 +1,46 @@
 const pool = require("../db");
 
 module.exports = {
-  createHistoire: (titre, description, userId) => {
-    return pool.query(
-      "INSERT INTO Histoire (titre, description, statut, pagedepart_id, auteur_id) VALUES (?, ?, 'brouillon', NULL, ?)",
-      [titre, description, userId]
-    );
+
+  // ➜ CREATE : utilise les données envoyées par le controller
+  create: async (data) => {
+    const sql = `
+      INSERT INTO Histoire 
+      (titre, description, statut, pagedepart_id, auteur_id, theme)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    const values = [
+      data.titre,
+      data.description,
+      data.statut,
+      data.pagedepart_id,
+      data.auteur_id,
+      data.theme
+    ];
+
+    const [result] = await pool.query(sql, values);
+    return result;
   },
 
+  // ➜ Mes histoires
   getMine: (userId) => {
     return pool.query("SELECT * FROM Histoire WHERE auteur_id = ?", [userId]);
   },
 
-  getById: (histoireId, userId) => {
-    return pool.query(
-      "SELECT * FROM Histoire WHERE id = ? AND auteur_id = ?",
-      [histoireId, userId]
-    );
+  // ➜ Une histoire par son ID
+  getById: (id) => {
+    return pool.query("SELECT * FROM Histoire WHERE id = ?", [id]);
   },
 
-  getAuteur: (histoireId) => {
-    return pool.query("SELECT auteur_id FROM Histoire WHERE id = ?", [histoireId]);
-  },
-
-  updateHistoire: (histoireId, titre, description, statut, pagedepart_id) => {
-    return pool.query(
-      `UPDATE Histoire 
-       SET titre = ?, description = ?, statut = ?, pagedepart_id = ?
-       WHERE id = ?`,
-      [titre, description, statut, pagedepart_id || null, histoireId]
-    );
-  },
-
-  deleteHistoire: (histoireId) => {
-    return pool.query("DELETE FROM Histoire WHERE id = ?", [histoireId]);
-  },
-
+  // ➜ Histoires publiques
   getAllPubliques: () => {
     return pool.query(`
-      SELECT
-        h.id,
-        h.titre,
-        h.description,
+      SELECT 
+        h.id, 
+        h.titre, 
+        h.description, 
+        h.theme,
         u.pseudo AS auteur
       FROM Histoire h
       LEFT JOIN Utilisateur u ON h.auteur_id = u.id
@@ -50,22 +49,73 @@ module.exports = {
     `);
   },
 
-  getOnePublic: (id) => {
-    return pool.query(
-      "SELECT id, titre, description FROM Histoire WHERE id = ? AND statut = 'publié'",
-      [id]
-    ); 
+  // ➜ Histoires publiées filtrées par thème
+  getAllPubliquesByTheme: (theme) => {
+    return pool.query(`
+      SELECT 
+        h.id, 
+        h.titre, 
+        h.description, 
+        h.theme,
+        u.pseudo AS auteur
+      FROM Histoire h
+      LEFT JOIN Utilisateur u ON h.auteur_id = u.id
+      WHERE h.statut = 'publié' AND h.theme = ?
+      ORDER BY h.id DESC
+    `, [theme]);
   },
 
-  getDebutPage: async (histoireId) => {
-    const [rows] = await pool.query(
-      `SELECT id, contenu AS texte, isEnd 
-       FROM Page 
-       WHERE histoire_id = ? 
-       ORDER BY id ASC 
-       LIMIT 1`,
-      [histoireId]
-    );
-    return rows[0] || null;
+  // ➜ Récupérer tous les thèmes uniques
+  getAllThemes: () => {
+    return pool.query(`
+      SELECT DISTINCT theme FROM Histoire 
+      WHERE statut = 'publié' AND theme IS NOT NULL
+      ORDER BY theme ASC
+    `);
   },
+
+  // ➜ UPDATE
+  update: async (id, data) => {
+    const sql = `
+      UPDATE Histoire
+      SET titre = ?, description = ?, statut = ?, pagedepart_id = ?, theme = ?
+      WHERE id = ?
+    `;
+
+    const values = [
+      data.titre,
+      data.description,
+      data.statut,
+      data.pagedepart_id || null,
+      data.theme,
+      id
+    ];
+
+    await pool.query(sql, values);
+  },
+
+  // ➜ DELETE
+  delete: (id) => {
+    return pool.query("DELETE FROM Histoire WHERE id = ?", [id]);
+  },
+
+  // ➜ Début de lecture - histoire publiée + première page
+  getDebutPublic: (histoireId) => {
+    return pool.query(`
+      SELECT 
+        h.id,
+        h.titre,
+        h.description,
+        h.theme,
+        h.pagedepart_id,
+        u.pseudo AS auteur,
+        p.id AS page_id,
+        p.contenu,
+        p.isEnd
+      FROM Histoire h
+      LEFT JOIN Utilisateur u ON h.auteur_id = u.id
+      LEFT JOIN Page p ON p.id = h.pagedepart_id
+      WHERE h.id = ? AND h.statut = 'publié'
+    `, [histoireId]);
+  }
 };
