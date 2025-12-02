@@ -55,11 +55,11 @@ USE controlefullstack;
 SOURCE controlefullstack.sql;
 
 4. Lancer l’application
-# Backend (http://localhost:5000)
+# Backend 
 cd api
 npm run dev
 
-# Frontend (http://localhost:5173)
+# Frontend 
 cd web
 npm run dev
 
@@ -142,7 +142,7 @@ GET /admin/utilisateurs
 PUT /admin/utilisateurs/:id/bannir
 PUT /admin/utilisateurs/:id/debannir
 
-Travail Réalisé par Laetitia
+    Travail Réalisé par Laetitia
 🎯 1. Filtrage des histoires par thème
 
 Ajout d’un système complet de thèmes permettant aux lecteurs de mieux naviguer parmi les histoires.
@@ -171,7 +171,6 @@ Fonctionnalités :
 Pour chaque histoire :
 
 - Nombre total de parties jouées
-
 - Nombre de fois où chaque fin a été atteinte
 
 Création d’un endpoint dédié :
@@ -181,7 +180,6 @@ Création d’un endpoint dédié :
 Affichage dans le frontend :
 
 - Répartition visuelle des fins atteintes
-
 - Statistiques pour les auteurs
 
   Résultat global
@@ -197,20 +195,85 @@ Grâce à ces fonctionnalités :
 
 
 
+    Travail à Réaliser par Kevin
+🏁 1. Fins nommées & collection de fins
 
-  Ce que Kevin doit faire : 
+Mise en place d’un système avancé permettant de personnaliser les fins d’une histoire et d’offrir au lecteur un sentiment de progression.
 
-  * Fins nommées & collection de fins :
+Fonctionnalités attendues :
 
-  * chaque page finale a un label ("Fin héroïque", "Fin tragique", etc.),
-  * le lecteur voit les fins qu’il a déjà débloquées pour une histoire.
+Chaque page finale possède désormais un label personnalisé
+Exemples :
 
-* Notation & commentaires :
+- Fin héroïque
+- Fin tragique
+- Fin secrète
 
-  * un utilisateur peut noter une histoire (1–5 ★) et laisser un commentaire,
-  * moyenne des notes + nombre de votes affichés sur la fiche de l’histoire.
+Lorsqu’un lecteur termine une histoire :
 
-* enregistrement automatique en cours de partie
-  doit être enregistré le parcours du joueur, et l'étape où il se trouve pour qu’il puisse reprendre
+- la fin atteinte est enregistrée
+- elle apparaît dans sa collection de fins débloquées
+- Le joueur peut consulter à tout moment :
+- les fins déjà découvertes
+- les fins restantes (sans contenu dévoilé)
 
-*un lecteur peut signaler une histoire
+⭐ 2. Notation & commentaires
+
+Pour améliorer la qualité des histoires et créer une interaction entre auteurs et lecteurs, Kevin à implémenter :
+
+- Un système de notation (ex : 1 à 5 étoiles)
+- Un système de commentaires sous chaque histoire
+- Gestion de ces données dans la base MySQL
+- API pour créer, modifier ou supprimer ses propres commentaires
+
+Affichage dynamique frontend :
+
+- moyenne des notes
+- liste des commentaires
+- pagination si nécessaire
+
+💾 3. Enregistrement automatique en cours de partie
+
+Pour permettre à un lecteur de reprendre une histoire là où il s'était arrêté, il faut enregistrer la progression :
+
+Fonctionnalités obligatoires :
+
+Sauvegarde automatique à chaque action du joueur :
+
+- Histoire en cours
+- La page actuelle
+- La date de dernière modification
+
+Si le joueur revient sur l’histoire :
+
+- Un bouton “Reprendre la partie” apparaît
+- Il est redirigé vers la page où il s’était arrêté
+
+API à implémenter :
+
+    - POST /progression/enregistrer
+    - GET /progression/:histoire_id
+
+🚨 4. Signalement d’histoire
+
+Pour renforcer la modération :
+
+- Un lecteur peut signaler une histoire
+
+Le signalement contient :
+
+    - L'id de l’histoire
+    
+    - L'id du lecteur
+    
+    - La raison du signalement
+    
+    - La date
+    
+Les signalements sont stockés dans une table signalement
+
+Une interface admin doit afficher :
+
+      - La liste des signalements
+      
+      - La possibilité de supprimer / traiter un signalement
