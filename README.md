@@ -1,6 +1,6 @@
-Projet ControleFullStack
+Projet NABH
 
-Plateforme web fullstack permettant de créer, gérer et jouer des histoires interactives, inspirée des livres dont vous êtes le héros.
+C'est une plateforme web fullstack permettant de créer, gérer et jouer des histoires interactives, inspirée des livres dont vous êtes le héros.
 
 🏗️ Architecture
 Backend
@@ -187,13 +187,8 @@ Affichage dans le frontend :
 Grâce à ces fonctionnalités :
 
 - Les lecteurs trouvent leurs histoires plus facilement (classement par thème)
-
 - Les auteurs disposent d’une vue statistique claire sur leur travail
-
 - L’application devient plus riche, plus intuitive et mieux structurée
-
-
-
 
     Travail à Réaliser par Kevin
 🏁 1. Fins nommées & collection de fins
@@ -263,11 +258,8 @@ Pour renforcer la modération :
 Le signalement contient :
 
     - L'id de l’histoire
-    
     - L'id du lecteur
-    
     - La raison du signalement
-    
     - La date
     
 Les signalements sont stockés dans une table signalement
