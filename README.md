@@ -30,3 +30,106 @@ ce que laetitia doit faire :
   doit être enregistré le parcours du joueur, et l'étape où il se trouve pour qu’il puisse reprendre
 
 *un lecteur peut signaler une histoire
+
+# 📖 Histoires Interactives
+
+Une application web permettant de créer, publier et jouer des histoires interactives à choix multiples.
+
+## 🎯 Fonctionnalités
+
+### Pour les joueurs
+- 📚 Parcourir toutes les histoires publiées
+- 🎮 Jouer des histoires interactives avec des choix
+- 💾 Sauvegarde automatique de la progression
+- 🔄 Reprendre une histoire où vous l'avez laissée
+- ⭐ Noter et commenter les histoires
+- 🚨 Signaler du contenu inapproprié
+- 📊 Voir vos statistiques 
+
+### Pour les auteurs
+- ✍️ Créer des histoires à embranchements multiples
+- ➕ Ajouter des choix menant à différentes pages
+- 🏁 Définir plusieurs fins possibles
+- 📤 Publier vos histoires pour les rendre accessibles
+- 📈 Consulter les statistiques de vos histoires
+
+## 🛠️ Technologies utilisées
+
+### Frontend
+- **React** 18
+- **React Router** pour la navigation
+- **Vite** comme bundler
+- CSS personnalisé
+
+### Backend
+- **Node.js** avec Express
+- **MySQL** (via mysql2/promise)
+- **bcrypt** pour le hashing des mots de passe
+- **dotenv** pour la configuration
+
+## 📦 Installation
+
+### Prérequis
+- Node.js (v16 ou supérieur)
+- MySQL (v8 ou supérieur)
+- npm ou yarn
+
+### 1. Cloner le projet
+```bash
+git clone <url-du-repo>
+cd ControleFullStack
+```
+
+Créez un fichier `.env` à la racine du dossier backend :
+
+```env
+DB_HOST=localhost
+DB_USER=votre_user
+DB_PASSWORD=votre_password
+DB_NAME=histoires_interactives
+PORT=5000
+```
+
+### 4. Configuration 
+
+```bash
+npm install
+```
+
+### 5. Lancer l'application
+
+**Terminal 1 - Backend :**
+```bash
+cd api
+npm run dev
+```
+
+**Terminal 2 - Frontend :**
+```bash
+cd web
+npm run dev
+```
+
+L'application sera accessible sur `http://localhost:5173`
+
+## 📁 Structure du projet
+
+```
+projet/
+├── backend/
+│   ├── controllers/          # Logique des routes
+│   ├── services/             # Logique métier
+│   ├── routes/               # Définition des routes
+│   ├── db.js                 # Configuration MySQL
+│   └── server.js             # Point d'entrée
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/       # Composants React
+│   │   ├── css/              # Styles
+│   │   ├── App.jsx           # Composant principal
+│   │   └── main.jsx          # Point d'entrée
+│   └── index.html
+│
+└── README.md
+```
