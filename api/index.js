@@ -9,6 +9,7 @@ const statsRoutes = require("./routes/RoutesStats");
 const adminRoutes = require("./routes/RoutesAdmin");
 const progressionRoutes = require("./routes/RoutesProgression");
 const avisRoutes = require("./routes/RoutesAvis");
+const signalerRoute = require("./routes/RouteSignaler");
 
 const cookieParser = require("cookie-parser");
 
@@ -33,5 +34,6 @@ app.use("/stats", statsRoutes);
 app.use("/admin", adminRoutes);
 app.use("/progression", progressionRoutes);
 app.use("/avis", avisRoutes);
+app.use("/signaler", signalerRoute);
 
 app.listen(PORT, () => console.log(`API running on port ${PORT}`));
